@@ -81,9 +81,20 @@ def process =
 		utils.edit(subject, ['dateReminder' : newDate, 'countReminders': subject.countReminders + 1]); 
 	}
 	
+	initiator = subject.source.clientEmployee != null ? subject.source.clientEmployee?.title : '';
+	currentPerson = subject.source.currentPerson != null ? (subject.source.currentPerson.title + ' (' + subject.source.currentPerson.privateCode + ')') : '';
+	subject.source.newPerson != null ? (subject.source.newPerson.title + ' (' + subject.source.newPerson.privateCode + ')') : '';
 }
 
 if (daysSupport.contains(currentDay) && startTime * 60 <= currentTime && finishTime * 60 >= currentTime)
 {
-	process();
+	process();	
 }
+
+/*
+* Добавление переменных в оповещение
+* 
+*/
+notification.scriptParams['initiator'] = initiator;
+notification.scriptParams['currentPerson'] = currentPerson;
+notification.scriptParams['newPerson'] = newPerson;
