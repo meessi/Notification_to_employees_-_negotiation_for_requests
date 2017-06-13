@@ -1,20 +1,20 @@
 import groovy.time.TimeCategory
 
-def date; // Текущая дата (+ время)
+def date; // РўРµРєСѓС‰Р°СЏ РґР°С‚Р° (+ РІСЂРµРјСЏ)
 
 use(TimeCategory)
 {
  	date = new Date();
 }
 
-def startTime = 8; // Работа скрипта с (время)
-def finishTime = 20; // Работа скрипта по (время)
-def daysSupport = [1, 2, 3, 4, 5]; // Дни работы скрипта (относительно дня недели)
-def currentTime = date.hours * 60 + date.minutes; // Текущее время (в мин)
-def currentDay = api.date.getNumberOfDayOfWeek(date); // Текущий день недели
+def startTime = 8; // Р Р°Р±РѕС‚Р° СЃРєСЂРёРїС‚Р° СЃ (РІСЂРµРјСЏ)
+def finishTime = 20; // Р Р°Р±РѕС‚Р° СЃРєСЂРёРїС‚Р° РїРѕ (РІСЂРµРјСЏ)
+def daysSupport = [1, 2, 3, 4, 5]; // Р”РЅРё СЂР°Р±РѕС‚С‹ СЃРєСЂРёРїС‚Р° (РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РґРЅСЏ РЅРµРґРµР»Рё)
+def currentTime = date.hours * 60 + date.minutes; // РўРµРєСѓС‰РµРµ РІСЂРµРјСЏ (РІ РјРёРЅ)
+def currentDay = api.date.getNumberOfDayOfWeek(date); // РўРµРєСѓС‰РёР№ РґРµРЅСЊ РЅРµРґРµР»Рё
 
 /*
-* Переменные для формирования оповещения
+* РџРµСЂРµРјРµРЅРЅС‹Рµ РґР»СЏ С„РѕСЂРјРёСЂРѕРІР°РЅРёСЏ РѕРїРѕРІРµС‰РµРЅРёСЏ
 * 
 */
 def initiator = '';
@@ -22,7 +22,7 @@ def currentPerson = '';
 def newPerson = '';
 
 /*
-* Метод добавления сотрудника в получатели оповещения
+* РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕС‚СЂСѓРґРЅРёРєР° РІ РїРѕР»СѓС‡Р°С‚РµР»Рё РѕРїРѕРІРµС‰РµРЅРёСЏ
 * 
 */
 def addToEmployeeToNotification =
@@ -32,16 +32,16 @@ def addToEmployeeToNotification =
 	if (api.mail.isValidEmail(employee.email))
     {
         notification.toEmployee << employee;
-        logger.info("Оповещение о голосовании: ${employee.title}")
+        logger.info("РћРїРѕРІРµС‰РµРЅРёРµ Рѕ РіРѕР»РѕСЃРѕРІР°РЅРёРё: ${employee.title}")
   	}
     else 
     {
-        logger.info("Сотруднику '${employee.title}' оповещение не отправлено: некорректный адрес электронной почты \"${employee.email}\".")
+        logger.info("РЎРѕС‚СЂСѓРґРЅРёРєСѓ '${employee.title}' РѕРїРѕРІРµС‰РµРЅРёРµ РЅРµ РѕС‚РїСЂР°РІР»РµРЅРѕ: РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ Р°РґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ \"${employee.email}\".")
     }
 }
 
 /*
-* Метод добавления сотрудника в копию оповещения
+* РњРµС‚РѕРґ РґРѕР±Р°РІР»РµРЅРёСЏ СЃРѕС‚СЂСѓРґРЅРёРєР° РІ РєРѕРїРёСЋ РѕРїРѕРІРµС‰РµРЅРёСЏ
 * 
 */
 def addCcEmployeeToNotification =
@@ -50,28 +50,28 @@ def addCcEmployeeToNotification =
 	
 	if (api.mail.isValidEmail(employee.email))
     {
-        notification.ссEmployee << employee;
-        logger.info("Оповещение о голосовании: ${employee.title}")
+        notification.СЃСЃEmployee << employee;
+        logger.info("РћРїРѕРІРµС‰РµРЅРёРµ Рѕ РіРѕР»РѕСЃРѕРІР°РЅРёРё: ${employee.title}")
   	}
     else 
     {
-        logger.info("Сотруднику '${employee.title}' оповещение не отправлено: некорректный адрес электронной почты \"${employee.email}\".")
+        logger.info("РЎРѕС‚СЂСѓРґРЅРёРєСѓ '${employee.title}' РѕРїРѕРІРµС‰РµРЅРёРµ РЅРµ РѕС‚РїСЂР°РІР»РµРЅРѕ: РЅРµРєРѕСЂСЂРµРєС‚РЅС‹Р№ Р°РґСЂРµСЃ СЌР»РµРєС‚СЂРѕРЅРЅРѕР№ РїРѕС‡С‚С‹ \"${employee.email}\".")
     }
 }
 
 def process =
 {
-	def employee = subject?.voter_em; // Получатель (соглсовант) оповещения
-	def accountant = utils.get('employee$33881292'); // Бухгалтер KOVALENKO Olga_F Fedori employee$104032
-	def otherEmployees = [employee.head, subject.source, accountant]; // Другие получатели (руководитель согласованта, инициатор запроса, бухгалтер) оповещения
+	def employee = subject?.voter_em; // РџРѕР»СѓС‡Р°С‚РµР»СЊ (СЃРѕРіР»СЃРѕРІР°РЅС‚) РѕРїРѕРІРµС‰РµРЅРёСЏ
+	def accountant = utils.get('employee$33881292'); // Р‘СѓС…РіР°Р»С‚РµСЂ KOVALENKO Olga_F Fedori employee$104032
+	def otherEmployees = [employee.head, subject.source, accountant]; // Р”СЂСѓРіРёРµ РїРѕР»СѓС‡Р°С‚РµР»Рё (СЂСѓРєРѕРІРѕРґРёС‚РµР»СЊ СЃРѕРіР»Р°СЃРѕРІР°РЅС‚Р°, РёРЅРёС†РёР°С‚РѕСЂ Р·Р°РїСЂРѕСЃР°, Р±СѓС…РіР°Р»С‚РµСЂ) РѕРїРѕРІРµС‰РµРЅРёСЏ
 	
-	addToEmployeeToNotification(employee); // Добавление согласованта в оповещение
+	addToEmployeeToNotification(employee); // Р”РѕР±Р°РІР»РµРЅРёРµ СЃРѕРіР»Р°СЃРѕРІР°РЅС‚Р° РІ РѕРїРѕРІРµС‰РµРЅРёРµ
 	
-	if (subject.countReminders >= 3) // Проверка на количество напоминаний-оповещений 
+	if (subject.countReminders >= 3) // РџСЂРѕРІРµСЂРєР° РЅР° РєРѕР»РёС‡РµСЃС‚РІРѕ РЅР°РїРѕРјРёРЅР°РЅРёР№-РѕРїРѕРІРµС‰РµРЅРёР№ 
 	{
 		for (def i = 0; i < otherEmployees.size(); i++)
 		{
-			addCcEmployeeToNotification(employee); // Добавление других получателей в оповещение
+			addCcEmployeeToNotification(employee); // Р”РѕР±Р°РІР»РµРЅРёРµ РґСЂСѓРіРёС… РїРѕР»СѓС‡Р°С‚РµР»РµР№ РІ РѕРїРѕРІРµС‰РµРЅРёРµ
 		}
 	}
 	
@@ -92,9 +92,10 @@ if (daysSupport.contains(currentDay) && startTime * 60 <= currentTime && finishT
 }
 
 /*
-* Добавление переменных в оповещение
+* Р”РѕР±Р°РІР»РµРЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… РІ РѕРїРѕРІРµС‰РµРЅРёРµ
 * 
 */
+
 notification.scriptParams['initiator'] = initiator;
 notification.scriptParams['currentPerson'] = currentPerson;
 notification.scriptParams['newPerson'] = newPerson;
