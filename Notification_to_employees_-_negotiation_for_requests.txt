@@ -1,0 +1,72 @@
+import groovy.time.TimeCategory
+
+def date; // Текущая дата (+ время)
+
+use(TimeCategory)
+{
+ 	date = new Date();
+}
+
+def startTime = 8; // Работа скрипта с (время)
+def finishTime = 20; // Работа скрипта по (время)
+def daysSupport = [1, 2, 3, 4, 5]; // Дни работы скрипта (относительно дня недели)
+def currentTime = date.hours * 60 + date.minutes; // Текущее время (в мин)
+def currentDay = api.date.getNumberOfDayOfWeek(date); // Текущий день недели
+
+/*
+* Метод добавления сотрудника в получатели оповещения
+* 
+*/
+def addToEmployeeToNotification =
+{
+	employee ->
+	
+	if (api.mail.isValidEmail(employee.email))
+    {
+        notification.toEmployee << employee;
+        logger.info("Оповещение о голосовании: ${employee.title}")
+  	}
+    else 
+    {
+        logger.info("Сотруднику '${employee.title}' оповещение не отправлено: некорректный адрес электронной почты \"${employee.email}\".")
+    }
+}
+
+/*
+* Метод добавления сотрудника в копию оповещения
+* 
+*/
+def addCcEmployeeToNotification =
+{
+	employee ->
+	
+	if (api.mail.isValidEmail(employee.email))
+    {
+        notification.ссEmployee << employee;
+        logger.info("Оповещение о голосовании: ${employee.title}")
+  	}
+    else 
+    {
+        logger.info("Сотруднику '${employee.title}' оповещение не отправлено: некорректный адрес электронной почты \"${employee.email}\".")
+    }
+}
+
+def process =
+{
+	def employee = subject?.voter_em; // Получатель (соглсовант) оповещения
+	def accountant = utils.get('employee$33881292'); // Бухгалтер KOVALENKO Olga_F Fedori employee$104032
+	def otherEmployees = [employee.head, subject.source, accountant]; // Другие получатели (руководитель согласованта, инициатор запроса, бухгалтер) оповещения
+	
+	addToEmployeeToNotification(employee); // Добавление согласованта в оповещение
+	
+	if (subject.countReminders >= 3) // Проверка на количество напоминаний-оповещений 
+	{
+		
+	}
+	
+}
+
+if (daysSupport.contains(currentDay) && startTime * 60 <= currentTime && finishTime * 60 >= currentTime)
+{
+	process();
+}
