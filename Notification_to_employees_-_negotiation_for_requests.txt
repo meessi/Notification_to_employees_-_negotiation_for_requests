@@ -14,6 +14,14 @@ def currentTime = date.hours * 60 + date.minutes; // “екущее врем€ (в мин)
 def currentDay = api.date.getNumberOfDayOfWeek(date); // “екущий день недели
 
 /*
+* ѕеременные дл€ формировани€ оповещени€
+* 
+*/
+def initiator = '';
+def currentPerson = '';
+def newPerson = '';
+
+/*
 * ћетод добавлени€ сотрудника в получатели оповещени€
 * 
 */
@@ -61,7 +69,16 @@ def process =
 	
 	if (subject.countReminders >= 3) // ѕроверка на количество напоминаний-оповещений 
 	{
-		
+		for (def i = 0; i < otherEmployees.size(); i++)
+		{
+			addCcEmployeeToNotification(employee); // ƒобавление других получателей в оповещение
+		}
+	}
+	
+	use(TimeCategory) 
+	{ 
+		def newDate = new Date() + 1.day - 1.minute; 
+		utils.edit(subject, ['dateReminder' : newDate, 'countReminders': subject.countReminders + 1]); 
 	}
 	
 }
