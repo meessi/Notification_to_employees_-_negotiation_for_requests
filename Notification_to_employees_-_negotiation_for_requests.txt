@@ -7,10 +7,7 @@ use(TimeCategory)
  	date = new Date();
 }
 
-def startTime = 8; // Работа скрипта с (время)
-def finishTime = 20; // Работа скрипта по (время)
 def daysSupport = [1, 2, 3, 4, 5]; // Дни работы скрипта (относительно дня недели)
-def currentTime = date.hours * 60 + date.minutes; // Текущее время (в мин)
 def currentDay = api.date.getNumberOfDayOfWeek(date); // Текущий день недели
 
 /*
@@ -75,20 +72,22 @@ def process =
 		}
 	}
 	
-	use(TimeCategory) 
-	{ 
-		def newDate = new Date() + 1.day - 1.minute; 
-		utils.edit(subject, ['dateReminder' : newDate, 'countReminders' : subject.countReminders + 1]); 
-	}
+	utils.edit(subject, ['countReminders' : subject.countReminders + 1]);
 	
 	initiator = subject.source.clientEmployee != null ? subject.source.clientEmployee?.title : '';
 	currentPerson = subject.source.currentPerson != null ? (subject.source.currentPerson.title + ' (' + subject.source.currentPerson.privateCode + ')') : '';
 	newPerson = subject.source.newPerson != null ? (subject.source.newPerson.title + ' (' + subject.source.newPerson.privateCode + ')') : '';
 }
 
-if (daysSupport.contains(currentDay) && startTime * 60 <= currentTime && finishTime * 60 >= currentTime)
+if (daysSupport.contains(currentDay))
 {
 	process();	
+}
+
+use(TimeCategory) 
+{ 
+	def newDate = new Date() + 1.day - 1.minute; 
+	utils.edit(subject, ['dateReminder' : newDate]); 
 }
 
 /*
