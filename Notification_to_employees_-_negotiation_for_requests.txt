@@ -5,6 +5,8 @@ def date; // Текущая дата (+ время)
 use(TimeCategory)
 {
  	date = new Date();
+	def newDate = date + 1.day - 1.minute; 
+	utils.edit(subject, ['dateReminder' : newDate]); 
 }
 
 def daysSupport = [1, 2, 3, 4, 5]; // Дни работы скрипта (относительно дня недели)
@@ -82,12 +84,6 @@ def process =
 if (daysSupport.contains(currentDay))
 {
 	process();	
-}
-
-use(TimeCategory) 
-{ 
-	def newDate = new Date() + 1.day - 1.minute; 
-	utils.edit(subject, ['dateReminder' : newDate]); 
 }
 
 /*
