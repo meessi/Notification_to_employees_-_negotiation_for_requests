@@ -46,11 +46,8 @@ def currentDayIsService =
 	return period == 0;
 }
 
-use(TimeCategory)
-{
-	def newDate = nextDateTimeReminder(date, nearestDateTimeService(date));
-	utils.edit(subject, ['dateReminder' : newDate]); 
-}
+def newDate = nextDateTimeReminder(date, nearestDateTimeService(date));
+utils.edit(subject, ['dateReminder' : newDate]); 
 
 /*
 * Переменные для формирования оповещения
